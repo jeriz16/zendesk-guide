@@ -10,16 +10,16 @@ jobs:
     name: Zendesk Guide to Slack
     steps:
       - id: last-execution
-          name: Get the last execution time
-          run: |
-            LAST_RUN=$(curl -fsSL "https://api.github.com/repos/${{ github.repository }}/actions/workflows/main.yml/runs" | jq -r '.workflow_runs | map(select(.status == "completed"))[0].created_at')
-            if [ -z "$LAST_RUN" ]; then
-              echo "No previous runs found. Defaulting to 1 hour ago."
-              LAST_RUN=$(date -d "1 hour ago" +%s)
-            else
-              LAST_RUN=$(date -d "$LAST_RUN" +%s)
-            fi
-            echo "last_run_time=$LAST_RUN" >> $GITHUB_OUTPUT
+        name: Get the last execution time
+        run: |
+          LAST_RUN=$(curl -fsSL "https://api.github.com/repos/${{ github.repository }}/actions/workflows/132198172/runs" | jq -r '.workflow_runs | map(select(.status == "completed"))[0].created_at')
+          if [ -z "$LAST_RUN" ]; then
+            echo "No previous runs found. Defaulting to 1 hour ago."
+            LAST_RUN=$(date -d "1 hour ago" +%s)
+          else
+            LAST_RUN=$(date -d "$LAST_RUN" +%s)
+          fi
+          echo "last_run_time=$LAST_RUN" >> $GITHUB_OUTPUT
 
       - name: Debug Repository and Variables
         run: |
