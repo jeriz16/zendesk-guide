@@ -3,6 +3,7 @@ name: Notify Zendesk Guide Update to Slack
 on:
   schedule:
     - cron: '0 * * * *'  # Runs every hour on the hour
+  workflow_dispatch:  # Enables manual runs
 
 jobs:
   zendesk_guide_slack_job:
@@ -28,8 +29,6 @@ jobs:
           echo "Current Actor: ${{ github.actor }}"
           echo "Repository Owner: ${{ github.repository_owner }}"
 
-
-          
       - id: guide
         name: Pull Guide update
         run: |
