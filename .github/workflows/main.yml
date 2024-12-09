@@ -20,6 +20,15 @@ jobs:
               LAST_RUN=$(date -d "$LAST_RUN" +%s)
             fi
             echo "last_run_time=$LAST_RUN" >> $GITHUB_OUTPUT
+
+      - name: Debug Repository and Variables
+        run: |
+          echo "Repository: ${{ github.repository }}"
+          echo "Workflow File: main.yml"
+          echo "Current Actor: ${{ github.actor }}"
+          echo "Repository Owner: ${{ github.repository_owner }}"
+
+
           
       - id: guide
         name: Pull Guide update
