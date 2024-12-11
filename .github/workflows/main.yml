@@ -41,9 +41,10 @@ jobs:
             ARTICLES="No updates found since last run."
           fi
 
-          echo "articles<<EOF" >> $GITHUB_OUTPUT
-          echo "$ARTICLES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          # Escape articles for output
+          ESCAPED_ARTICLES=$(echo "$ARTICLES" | sed 's/"/\\"/g' | sed 's/\\/\\\\/g')
+
+          echo "articles=$ESCAPED_ARTICLES" >> $GITHUB_OUTPUT
 
       - id: slack
         name: Notify Slack
