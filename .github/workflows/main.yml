@@ -53,16 +53,11 @@ jobs:
             echo "No updates to send to Slack."
             exit 0
           fi
-      
-          # Format the articles with bold titles and proper line breaks
-          FORMATTED_ARTICLES=$(echo "${{ steps.guide.outputs.articles }}" \
-            | sed 's/^-/\\n- */g' \
-            | sed 's/:/*:/' \
-            | sed 's/$/*/')
-      
-          echo "Sending to Slack: $FORMATTED_ARTICLES"
-      
-          # Send the notification to Slack
+
+          ESCAPED_ARTICLES=$(echo "${{ steps.guide.outputs.articles }}" | sed 's/"/\\"/g' | sed 's/\\/\\\\/g')
+
+          echo "Sending to Slack: $ESCAPED_ARTICLES"
+
           curl -X POST -H "Content-type: application/json; charset=utf-8" \
-          -d "{\"text\": \"Recent Article Updates:\\n$FORMATTED_ARTICLES\"}" \
+          -d "{\"text\": \"Recent Article Updates:\n$ESCAPED_ARTICLES\"}" \
           ${{ secrets.SLACK_WEBHOOK }}
