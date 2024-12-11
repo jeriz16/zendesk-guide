@@ -34,12 +34,16 @@ jobs:
         run: |
           ARTICLES=$(curl -fsSL -X GET -H 'Content-type: application/json; charset=utf-8' \
           -u ${{ secrets.ZENDESK_EMAIL }}/token:${{ secrets.ZENDESK_TOKEN }} \
-          "https://${{ secrets.ZENDESK_SUBDOMAIN }}.zendesk.com/api/v2/help_center/incremental/articles?start_time=${{ steps.last-execution.outputs.last_run_time }}" | jq -r '.articles[] | [.title, .updated_at, .html_url] | @json')
+          "https://${{ secrets.ZENDESK_SUBDOMAIN }}.zendesk.com/api/v2/help_center/incremental/articles?start_time=${{ steps.last-execution.outputs.last_run_time }}" | jq -r '.articles[] | "- \(.title): \(.html_url)"' | tr '\n' '\\n')
+
           if [ -z "$ARTICLES" ]; then
             echo "No articles found."
             ARTICLES="No updates found since last run."
           fi
-          echo "articles=$ARTICLES" >> $GITHUB_OUTPUT
+
+          echo "articles<<EOF" >> $GITHUB_OUTPUT
+          echo "$ARTICLES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - id: slack
         name: Notify Slack
