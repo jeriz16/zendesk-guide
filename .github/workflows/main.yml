@@ -48,10 +48,12 @@ jobs:
       - id: slack
         name: Notify Slack
         run: |
-          if [ "${{ steps.guide.outputs.articles }}" == "No updates found since last run." ]; then
+          if [ "${{ steps.guide.outputs.articles }}" = "No updates found since last run." ]; then
             echo "No updates to send to Slack."
             exit 0
           fi
+      
+          echo "Sending to Slack: ${{ steps.guide.outputs.articles }}"
           curl -X POST -H "Content-type: application/json; charset=utf-8" \
           -d "{\"text\": \"Recent Article Updates:\n${{ steps.guide.outputs.articles }}\"}" \
           ${{ secrets.SLACK_WEBHOOK }}
