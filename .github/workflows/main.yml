@@ -45,22 +45,18 @@ jobs:
           echo "$ARTICLES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-     - id: slack
+      - id: slack
         name: Notify Slack
         run: |
-          # Handle the "No updates" case
           if [ "${{ steps.guide.outputs.articles }}" = "No updates found since last run." ]; then
             echo "No updates to send to Slack."
             exit 0
           fi
-      
-          # Escape special characters in the articles string
-          ESCAPED_ARTICLES=$(echo "${{ steps.guide.outputs.articles }}" | sed 's/"/\\"/g' | sed 's/\\/\\\\/g' | tr '\n' ' ')
-      
-          # Log escaped articles for debugging
+
+          ESCAPED_ARTICLES=$(echo "${{ steps.guide.outputs.articles }}" | sed 's/"/\\"/g' | sed 's/\\/\\\\/g')
+
           echo "Sending to Slack: $ESCAPED_ARTICLES"
-      
-          # Send the notification to Slack
+
           curl -X POST -H "Content-type: application/json; charset=utf-8" \
           -d "{\"text\": \"Recent Article Updates:\n$ESCAPED_ARTICLES\"}" \
           ${{ secrets.SLACK_WEBHOOK }}
